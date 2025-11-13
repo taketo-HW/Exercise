@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🐕 犬の画像</h1>
+        
+        <button id="fetchBtn" onclick="fetchDog()">画像を取得</button>
+        
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+        </div>
+        
+        <div id="error" class="error hidden"></div>
+        
+        <div id="dogImage" class="dog-image hidden"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
