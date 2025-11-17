@@ -6,6 +6,7 @@
 
 ```
 .
+├── .dockerignore      # Dockerビルド時に除外するファイル
 ├── Dockerfile          # Dockerイメージの定義
 ├── pom.xml            # Mavenプロジェクト設定
 ├── src/
@@ -58,6 +59,18 @@ public class AnotherTest {
     }
 }
 ```
+
+## ファイル説明
+
+### .dockerignore
+
+Dockerビルド時にコンテナにコピーしないファイルやディレクトリを指定します。これにより、ビルド時間の短縮とイメージサイズの削減が可能です。
+
+除外される主な項目：
+- `target/` - Mavenのビルド成果物
+- `.git/` - Gitリポジトリ情報
+- IDE設定ファイル（`.idea/`, `.vscode/`など）
+- コンパイル済みファイル（`*.class`）
 
 ## 技術スタック
 
