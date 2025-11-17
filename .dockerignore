@@ -1,4 +1,4 @@
-target/
+.dockerignore.dockerignoretarget/
 .git/
 .gitignore
 *.iml

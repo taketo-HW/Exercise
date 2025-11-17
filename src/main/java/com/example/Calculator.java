@@ -1,3 +1,5 @@
+package com.example;
+
 /**
  * 簡単な計算を行うクラス
  */
