@@ -87,5 +87,25 @@ public class UserFunctions {
             return this.fitnessScore >= 80;
         }
     }
+
+    /**
+     * 点数を外部バリデーターでチェックし、その後内部ロジックで合格判定を行う。
+     * @param score チェックする点数
+     * @param validator 外部バリデーター
+     * @return 最終的な合格判定
+     */
+    public boolean checkAndPass(int score, ScoreValidator validator) {
+        // 外部バリデーターがfalseを返したら即座に不合格 (ブランチ1)
+        if (!validator.validate(score)) { 
+            return false; 
+        }
+        
+        // 内部の合格ロジック (点数が50点以上で合格)
+        if (score >= 50) { // ブランチ2 (合格)
+            return true;
+        } else { // ブランチ3 (不合格)
+            return false;
+        }
+    }
 }
 
