@@ -19,15 +19,28 @@ public class UserFunctionsTest {
     }
 
     @Test //成人判定ロジックの検証（アサーション）
-    void testIsAdult() {
+    void testIsFitnessTestA() {
         UserFunctions.setAge(20);
-        assertTrue(UserFunctions.isAdult(), "テストケース A: 基準値（成人）のテスト");
+        UserFunctions.setGender("MALE");
+        UserFunctions.setFitnessScore(60);
+        assertTrue(UserFunctions.isFitnessTestPassed(), "テストケース A: 20歳以上男性の合格テスト（最小合格境界値）");
+    }
+    
+
+    @Test //体力テスト女性不合格ロジックの検証（アサーション）
+    void testIsFitnessTestB() {
+        UserFunctions.setAge(19);
+        UserFunctions.setGender("FEMALE");
+        UserFunctions.setFitnessScore(79);
+        assertFalse(UserFunctions.isFitnessTestPassed(), "テストケース B: 19歳以下の不合格テスト（最大不合格境界値）");
     }
 
-    @Test //成人判定ロジックの検証（アサーション）
-    void testIsNotAdult() {
-        UserFunctions.setAge(19);
-        assertFalse(UserFunctions.isAdult(), "テストケース B: 基準値外（未成年）のテスト");
+    @Test //体力テスト女性不合格ロジックの検証（アサーション）
+    void testIsFitnessTestC() {
+        UserFunctions.setAge(25);
+        UserFunctions.setGender("FEMALE");
+        UserFunctions.setFitnessScore(54);
+        assertFalse(UserFunctions.isFitnessTestPassed(), "テストケース C: 20歳以上女性の不合格境界値テスト（最大不合格境界値）");
     }
 
     @AfterEach
