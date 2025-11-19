@@ -16,7 +16,8 @@
 │   │           └── example/
 │   │               ├── Calculator.java      # 計算を行うメインクラス
 │   │               ├── PricingService.java  # 4と5章の基本演習用：価格計算サービス
-│   │               └── UserFunctions.java   # 4章の応用演習用：ユーザー機能クラス
+│   │               ├── UserFunctions.java   # 6，4章の応用演習用：ユーザー機能クラス
+│   │               └── ScoreValidator.java  # 6章の演習用：点数検証インターフェース
 │   └── test/
 │       └── java/
 │           └── com/
@@ -96,7 +97,12 @@ public class AnotherTest {
 ユーザー機能クラス。基本的な計算機能とユーザー情報管理機能を提供します。
 - `add()` - 足し算
 - `divide()` - 割り算（0除算の例外処理あり）
-- `isAdult()` - 成人判定（20歳以上）
+- `isFitnessTestPassed()` - 体力テストの合格判定（年齢、性別、点数を考慮）
+- `checkAndPass()` - 外部バリデーターを使用した点数チェックと合格判定（6章の演習用）
+
+#### `com.example.ScoreValidator`
+点数検証インターフェース。外部システムで点数が有効な範囲内にあるかを検証するためのインターフェースです（6章の演習用）。
+- `validate()` - 点数が有効な範囲内にあるかを検証
 
 ### .dockerignore
 
