@@ -26,10 +26,19 @@
 
 ### MySQLへの接続
 
-#### コマンドラインから接続
+#### コマンドラインから接続（日本語入力対応）
+
 ```bash
-docker exec -it mysql-container mysql -uroot -proot
+docker exec -it mysql-container mysql -uroot -proot --default-character-set=utf8
 ```
+
+> **重要**: 
+> - 接続後、`SET NAMES utf8;`を実行することで、文字コードを確実に設定できます。
+> - 文字コードが正しく設定されているか確認するには：
+>   ```sql
+>   SHOW VARIABLES LIKE 'character%';
+>   ```
+>   `character_set_client`、`character_set_connection`、`character_set_results`が`utf8`になっていることを確認してください。
 
 MySQLから抜ける場合は、以下のコマンドを実行してください。
 ```sql
@@ -77,7 +86,9 @@ docker-compose down -v
 
 ### データベースのバックアップ（ダンプ）
 
-> **注意**: ダンプを取得する前に、MySQLコンテナが起動していることを確認してください。`docker-compose ps`でコンテナの状態を確認できます。
+> **注意**: 
+> - ダンプを取得する前に、MySQLコンテナが起動していることを確認してください。`docker-compose ps`でコンテナの状態を確認できます。
+> - PowerShellでサブディレクトリに保存する場合は、事前にディレクトリを作成してください（例: `mkdir Mysql`）。
 
 #### 特定のデータベースをダンプする
 ```bash
