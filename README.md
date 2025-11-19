@@ -75,6 +75,41 @@ docker-compose down
 docker-compose down -v
 ```
 
+### データベースのバックアップ（ダンプ）
+
+> **注意**: ダンプを取得する前に、MySQLコンテナが起動していることを確認してください。`docker-compose ps`でコンテナの状態を確認できます。
+
+#### 特定のデータベースをダンプする
+```bash
+docker exec mysql-container mysqldump -uroot -proot demo > backup_demo.sql
+```
+
+#### すべてのデータベースをダンプする
+```bash
+docker exec mysql-container mysqldump -uroot -proot --all-databases > backup_all.sql
+```
+
+### データベースの復元
+
+#### SQLファイルから復元する
+```bash
+docker exec -i mysql-container mysql -uroot -proot demo < backup_demo.sql
+```
+
+#### すべてのデータベースを復元する
+```bash
+docker exec -i mysql-container mysql -uroot -proot < backup_all.sql
+```
+
+#### 復元前にデータベースを再作成する場合
+```bash
+# 1. データベースを削除して再作成
+docker exec -it mysql-container mysql -uroot -proot -e "DROP DATABASE IF EXISTS demo; CREATE DATABASE demo;"
+
+# 2. ダンプファイルから復元
+docker exec -i mysql-container mysql -uroot -proot demo < backup_demo.sql
+```
+
 ### トラブルシューティング
 
 #### ポート3306が既に使用されている場合
