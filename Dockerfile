@@ -21,4 +21,9 @@ RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /
 
 ENV LANG=ja_JP.UTF-8
 
+# カスタムエントリーポイントスクリプトをコピー
+COPY docker-entrypoint.sh /usr/local/bin/custom-entrypoint.sh
+RUN chmod +x /usr/local/bin/custom-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/custom-entrypoint.sh"]
 CMD ["mysqld"]

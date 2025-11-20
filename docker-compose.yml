@@ -17,3 +17,4 @@ services:
       TZ: "Asia/Tokyo"
     volumes:
       - ./my.ini:/etc/mysql/conf.d/my.ini
+      - ./Buckup:/mnt/buckup

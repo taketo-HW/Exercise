@@ -26,7 +26,18 @@
 
 ### MySQLへの接続
 
-#### コマンドラインから接続（日本語入力対応）
+#### Docker環境内のbashシェルに入る
+
+```bash
+docker exec -it mysql-container bash
+```
+
+bashシェル内では、以下のコマンドでMySQLに接続できます：
+```bash
+mysql -uroot -proot --default-character-set=utf8
+```
+
+#### コマンドラインから直接接続（日本語入力対応）
 
 ```bash
 docker exec -it mysql-container mysql -uroot -proot --default-character-set=utf8
@@ -69,56 +80,126 @@ quit
 
 ### 停止・削除
 
+> **自動バックアップ機能**: 
+> - コンテナ起動時: ホスト側の`Buckup`ディレクトリ配下のファイルが自動的にDocker環境内の`/tmp`にコピーされます。
+> - コンテナ停止時: Docker環境内の`/tmp`配下の`.sql`ファイルが自動的にホスト側の`Buckup`ディレクトリにバックアップされます。
+> - **推奨**: 通常は`/mnt/buckup`（ホスト側の`Buckup`ディレクトリにマウント）に直接保存することで、即座にホスト側に反映されます。
+
 #### コンテナの停止
 ```bash
 docker-compose stop
 ```
+停止時に、`/tmp`配下の`.sql`ファイルが自動的に`Buckup`ディレクトリにバックアップされます。
 
 #### コンテナの停止と削除（データは保持）
 ```bash
 docker-compose down
 ```
+停止時に、`/tmp`配下の`.sql`ファイルが自動的に`Buckup`ディレクトリにバックアップされます。
 
 #### コンテナの停止と削除（データも削除）
 ```bash
 docker-compose down -v
 ```
+> **注意**: `-v`オプションを使用すると、ボリュームも削除されますが、`Buckup`ディレクトリはホスト側のディレクトリなので削除されません。停止時にバックアップは実行されます。
 
 ### データベースのバックアップ（ダンプ）
 
 > **注意**: 
 > - ダンプを取得する前に、MySQLコンテナが起動していることを確認してください。`docker-compose ps`でコンテナの状態を確認できます。
-> - PowerShellでサブディレクトリに保存する場合は、事前にディレクトリを作成してください（例: `mkdir Mysql`）。
+> - 以下の操作は、Docker環境内のbashシェルに入ってから実行してください。
+> - バックアップ先フォルダ:
+>   - **ローカル（ホスト側）**: `Buckup/XXX.sql`
+>   - **Linux（Docker環境内）**: `/mnt/buckup/XXX.sql`
+>   - `/mnt/buckup`はホスト側の`Buckup`ディレクトリにマウントされているため、`/mnt/buckup`に保存するとホスト側の`Buckup`ディレクトリに即座に反映されます。
 
 #### 特定のデータベースをダンプする
+
 ```bash
-docker exec mysql-container mysqldump -uroot -proot demo > backup_demo.sql
+# 1. Docker環境内のbashシェルに入る
+docker exec -it mysql-container bash
+
+# 2. bashシェル内でダンプを実行
+# 保存先: /mnt/buckup/backup_demo.sql（ホスト側のBuckup/backup_demo.sqlに対応）
+mysqldump -uroot -proot --default-character-set=utf8 demo > /mnt/buckup/backup_demo.sql
 ```
 
 #### すべてのデータベースをダンプする
+
 ```bash
-docker exec mysql-container mysqldump -uroot -proot --all-databases > backup_all.sql
+# 1. Docker環境内のbashシェルに入る
+docker exec -it mysql-container bash
+
+# 2. bashシェル内でダンプを実行
+# 保存先: /mnt/buckup/backup_all.sql（ホスト側のBuckup/backup_all.sqlに対応）
+mysqldump -uroot -proot --default-character-set=utf8 --all-databases > /mnt/buckup/backup_all.sql
 ```
 
 ### データベースの復元
 
+> **注意**: 
+> - 以下の操作は、Docker環境内のbashシェルに入ってから実行してください。
+> - バックアップファイルのパス:
+>   - **ローカル（ホスト側）**: `Buckup/XXX.sql`
+>   - **Linux（Docker環境内）**: `/mnt/buckup/XXX.sql`
+>   - `/mnt/buckup`はホスト側の`Buckup`ディレクトリにマウントされているため、ホスト側の`Buckup`ディレクトリにあるファイルは`/mnt/buckup`から直接アクセスできます。
+
 #### SQLファイルから復元する
+
 ```bash
-docker exec -i mysql-container mysql -uroot -proot demo < backup_demo.sql
+# 1. Docker環境内のbashシェルに入る
+docker exec -it mysql-container bash
+
+# 2. bashシェル内で復元を実行
+# 復元元: /mnt/buckup/backup_demo.sql（ホスト側のBuckup/backup_demo.sqlに対応）
+mysql -uroot -proot --default-character-set=utf8 demo < /mnt/buckup/backup_demo.sql
 ```
 
 #### すべてのデータベースを復元する
+
 ```bash
-docker exec -i mysql-container mysql -uroot -proot < backup_all.sql
+# 1. Docker環境内のbashシェルに入る
+docker exec -it mysql-container bash
+
+# 2. bashシェル内で復元を実行
+# 復元元: /mnt/buckup/backup_all.sql（ホスト側のBuckup/backup_all.sqlに対応）
+mysql -uroot -proot --default-character-set=utf8 < /mnt/buckup/backup_all.sql
 ```
 
 #### 復元前にデータベースを再作成する場合
-```bash
-# 1. データベースを削除して再作成
-docker exec -it mysql-container mysql -uroot -proot -e "DROP DATABASE IF EXISTS demo; CREATE DATABASE demo;"
 
-# 2. ダンプファイルから復元
-docker exec -i mysql-container mysql -uroot -proot demo < backup_demo.sql
+```bash
+# 1. Docker環境内のbashシェルに入る
+docker exec -it mysql-container bash
+
+# 2. bashシェル内でデータベースを削除して再作成
+mysql -uroot -proot -e "DROP DATABASE IF EXISTS demo; CREATE DATABASE demo;"
+
+# 3. bashシェル内でダンプファイルから復元
+# 復元元: /mnt/buckup/backup_demo.sql（ホスト側のBuckup/backup_demo.sqlに対応）
+mysql -uroot -proot --default-character-set=utf8 demo < /mnt/buckup/backup_demo.sql
+```
+
+### Docker環境とホスト間のファイルコピー
+
+> **注意**: 
+> - `/mnt/buckup`はホスト側の`Buckup`ディレクトリにマウントされているため、通常は`docker cp`コマンドは不要です。
+> - ホスト側の`Buckup`ディレクトリのファイルは`/mnt/buckup`から直接アクセスでき、`/mnt/buckup`に保存したファイルはホスト側の`Buckup`ディレクトリに即座に反映されます。
+
+#### ホスト側からDocker環境内にファイルをコピーする（通常は不要）
+
+`/mnt/buckup`以外の場所にコピーする場合のみ使用：
+```bash
+# ホスト側: Buckup/backup_demo.sql → Docker環境内: /tmp/backup_demo.sql
+docker cp Buckup/backup_demo.sql mysql-container:/tmp/backup_demo.sql
+```
+
+#### Docker環境内からホスト側にファイルをコピーする（通常は不要）
+
+`/mnt/buckup`以外の場所からコピーする場合のみ使用：
+```bash
+# Docker環境内: /tmp/backup_demo.sql → ホスト側: Buckup/backup_demo.sql
+docker cp mysql-container:/tmp/backup_demo.sql Buckup/backup_demo.sql
 ```
 
 ### トラブルシューティング
