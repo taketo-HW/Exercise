@@ -1,0 +1,10 @@
+{
+  "urls": [
+    {
+      "url": "/sample.yaml",
+      "name": "Products API (完全版)"
+    }
+  ],
+  "urls.primaryName": "Products API (完全版)"
+}
+

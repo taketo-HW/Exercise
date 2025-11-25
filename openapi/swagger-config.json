@@ -1,0 +1,14 @@
+{
+  "urls": [
+    {
+      "url": "/openapi/sample.yaml",
+      "name": "Products API (完全版)"
+    },
+    {
+      "url": "/openapi/exercise/user-api.yaml",
+      "name": "Users API (GETのみ)"
+    }
+  ],
+  "urls.primaryName": "Products API (完全版)"
+}
+

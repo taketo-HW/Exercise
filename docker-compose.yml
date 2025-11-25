@@ -1,0 +1,13 @@
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    container_name: swagger-ui
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./openapi:/usr/share/nginx/html/openapi:ro
+    environment:
+      - SWAGGER_JSON=/usr/share/nginx/html/openapi/sample.yaml
+      - CONFIG_URL=/openapi/swagger-config.json
+    restart: unless-stopped
+

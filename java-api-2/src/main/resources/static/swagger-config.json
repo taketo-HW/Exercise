@@ -1,0 +1,10 @@
+{
+  "urls": [
+    {
+      "url": "/exercise/user-api.yaml",
+      "name": "Users API (GETのみ)"
+    }
+  ],
+  "urls.primaryName": "Users API (GETのみ)"
+}
+

@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: User Management API
+  description: ユーザー管理APIのOpenAPI仕様書を作成してください
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8082
+    description: ローカル開発環境
+
+paths:
+  /api/users:
+    get:
+      summary: ユーザー一覧取得
+      description: すべてのユーザー一覧を取得します
+      operationId: getUsers
+      tags:
+        - Users
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/users/{id}:
+    get:
+      summary: ユーザー詳細取得
+      description: 指定されたIDのユーザー情報を取得します
+      operationId: getUserById
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ユーザーID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # TODO: 以下のエンドポイントを定義してください
+  # POST /api/users - ユーザー作成
+  # PUT /api/users/{id} - ユーザー更新
+  # DELETE /api/users/{id} - ユーザー削除
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          description: ユーザーID
+          example: 1
+        name:
+          type: string
+          description: ユーザー名
+          example: "山田太郎"
+        email:
+          type: string
+          description: メールアドレス
+          example: "yamada@example.com"
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+          example: "2024-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+          example: "2024-01-01T00:00:00Z"
+
+    # TODO: 以下のスキーマを定義してください
+    # UserRequest, Error など
+
+  responses:
+    # TODO: 以下の共通レスポンスを定義してください
+    # BadRequest, NotFound, InternalServerError など
